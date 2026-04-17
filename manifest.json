@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Rails Credentials Decryptor",
+  "version": "1.0.0",
+  "description": "Decrypt Rails encrypted credentials (.yml.enc) inline in GitHub PR diffs for review.",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://github.com/*/pull/*"],
+      "js": ["decrypt.js", "content.js"],
+      "css": ["content.css"]
+    }
+  ]
+}

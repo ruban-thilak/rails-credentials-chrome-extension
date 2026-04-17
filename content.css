@@ -1,0 +1,206 @@
+/* Decrypt / Hide buttons */
+.rails-creds-btn-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.rails-creds-decrypt-btn,
+.rails-creds-hide-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  border-radius: 6px;
+  border: 1px solid;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  cursor: pointer;
+  line-height: 20px;
+  white-space: nowrap;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.rails-creds-decrypt-btn {
+  background: var(--bgColor-success-muted, #dafbe1);
+  color: var(--fgColor-success, #116329);
+  border-color: var(--borderColor-success-muted, #aceebb);
+}
+
+.rails-creds-decrypt-btn:hover {
+  background: var(--bgColor-success-emphasis, #aceebb);
+  border-color: var(--borderColor-success-emphasis, #4ac26b);
+  color: var(--fgColor-onEmphasis, #ffffff);
+}
+
+.rails-creds-decrypt-btn:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.rails-creds-hide-btn {
+  background: var(--bgColor-attention-muted, #fff8c5);
+  color: var(--fgColor-attention, #6a5300);
+  border-color: var(--borderColor-attention-muted, #d4a72c);
+}
+
+.rails-creds-hide-btn:hover {
+  background: var(--bgColor-attention-emphasis, #fae17d);
+  border-color: var(--borderColor-attention-emphasis, #9a6700);
+  color: var(--fgColor-onEmphasis, #ffffff);
+}
+
+/* Decrypted content area */
+.rails-creds-decrypted {
+  border: 2px solid var(--borderColor-attention-muted, #bf8700);
+  border-radius: 6px;
+  margin: 8px 0;
+  overflow: hidden;
+}
+
+.rails-creds-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--bgColor-attention-muted, #fff8c5);
+  color: var(--fgColor-attention, #6a5300);
+  font-size: 12px;
+  font-weight: 500;
+  border-bottom: 1px solid var(--borderColor-attention-muted, #d4a72c);
+}
+
+.rails-creds-content {
+  overflow-x: auto;
+  background: var(--bgColor-default, var(--color-canvas-default, #0d1117));
+  color: var(--fgColor-default, var(--color-fg-default, #e6edf3));
+}
+
+.rails-creds-single-label {
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fgColor-muted, #8b949e);
+  background: var(--bgColor-muted, var(--color-canvas-subtle, #161b22));
+  border-bottom: 1px solid var(--borderColor-default, #30363d);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Diff table */
+.rails-creds-diff-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.rails-creds-diff-table tr {
+  border: none;
+}
+
+.rails-creds-diff-table td {
+  padding: 0 4px;
+  vertical-align: top;
+  border: none;
+}
+
+.rails-creds-diff-table pre {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: inherit;
+}
+
+.rails-creds-line-num {
+  width: 40px;
+  min-width: 40px;
+  text-align: right;
+  color: var(--fgColor-muted, var(--color-fg-subtle, #8b949e));
+  user-select: none;
+  padding-right: 8px !important;
+}
+
+.rails-creds-line-prefix {
+  width: 16px;
+  min-width: 16px;
+  text-align: center;
+  user-select: none;
+  font-weight: 600;
+}
+
+.rails-creds-line-content {
+  padding-left: 4px !important;
+}
+
+/* Line colors — use GitHub's own diff color variables */
+.rails-creds-line-add {
+  background: var(--diffBlob-addition-bgColor-line, var(--color-diff-blob-addition-line-bg, rgba(63, 185, 80, 0.15)));
+}
+
+.rails-creds-line-add .rails-creds-line-prefix {
+  color: var(--fgColor-success, var(--color-diff-blob-addition-fg, #3fb950));
+}
+
+.rails-creds-line-add .rails-creds-line-num {
+  background: var(--diffBlob-addition-bgColor-num, var(--color-diff-blob-addition-num-bg, rgba(63, 185, 80, 0.3)));
+}
+
+.rails-creds-line-del {
+  background: var(--diffBlob-deletion-bgColor-line, var(--color-diff-blob-deletion-line-bg, rgba(248, 81, 73, 0.15)));
+}
+
+.rails-creds-line-del .rails-creds-line-prefix {
+  color: var(--fgColor-danger, var(--color-diff-blob-deletion-fg, #f85149));
+}
+
+.rails-creds-line-del .rails-creds-line-num {
+  background: var(--diffBlob-deletion-bgColor-num, var(--color-diff-blob-deletion-num-bg, rgba(248, 81, 73, 0.3)));
+}
+
+/* Toast notifications */
+.rails-creds-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 500;
+  z-index: 999999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  max-width: 400px;
+}
+
+.rails-creds-toast-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.rails-creds-toast-success {
+  background: var(--bgColor-success-muted, #dafbe1);
+  color: var(--fgColor-success, #116329);
+  border: 1px solid var(--borderColor-success-muted, #aceebb);
+}
+
+.rails-creds-toast-warn {
+  background: var(--bgColor-attention-muted, #fff8c5);
+  color: var(--fgColor-attention, #6a5300);
+  border: 1px solid var(--borderColor-attention-muted, #d4a72c);
+}
+
+.rails-creds-toast-error {
+  background: var(--bgColor-danger-muted, #ffebe9);
+  color: var(--fgColor-danger, #cf222e);
+  border: 1px solid var(--borderColor-danger-muted, #ff8182);
+}
