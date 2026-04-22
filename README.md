@@ -56,21 +56,16 @@ Each environment/region maps to a separate master key slot in the popup.
 
 ## Installation
 
-### From the Chrome Web Store
+### From Source
 
-1. Visit the [Rails Credentials Helper](https://chrome.google.com/webstore/detail/TODO) listing.
-2. Click **Add to Chrome**.
-3. Pin the extension for easy access.
-
-### From Source (Developer Mode)
-
-1. Clone the repo:
+1. Turn on Developer Mode in Chrome Extensions
+2. Clone the repo:
    ```bash
    git clone https://github.com/ruban-thilak/rails-credentials-chrome-extension.git
    ```
-2. Open `chrome://extensions/` and enable **Developer mode**.
-3. Click **Load unpacked** and select the cloned directory.
-4. Pin the extension for easy access.
+3. Open `chrome://extensions/` and enable **Developer mode**.
+4. Click **Load unpacked** and select the cloned directory.
+5. Pin the extension for easy access.
 
 No build step, no dependencies — it's plain JS that runs directly in Chrome.
 
