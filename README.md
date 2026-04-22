@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/<your-org>/ruby-creds-chrome-ext/actions/workflows/ci.yml"><img src="https://github.com/<your-org>/ruby-creds-chrome-ext/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ruban-thilak/rails-credentials-chrome-extension/actions/workflows/ci.yml"><img src="https://github.com/ruban-thilak/rails-credentials-chrome-extension/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
 </p>
 
 ---
@@ -66,7 +66,7 @@ Each environment/region maps to a separate master key slot in the popup.
 
 1. Clone the repo:
    ```bash
-   git clone https://github.com/<your-org>/ruby-creds-chrome-ext.git
+   git clone https://github.com/<your-org>/rails-credentials-chrome-extension.git
    ```
 2. Open `chrome://extensions/` and enable **Developer mode**.
 3. Click **Load unpacked** and select the cloned directory.
@@ -154,7 +154,7 @@ This mirrors exactly what `ActiveSupport::EncryptedFile#read` does in Ruby.
    - **Description** — use the summary from this README.
    - **Screenshots** — upload `screenshots/popup.png` (1280×800 or 640×400 recommended).
    - **Category** — Developer Tools.
-   - **Privacy policy URL** — link to `PRIVACY.md` in your repo (e.g. `https://github.com/<your-org>/ruby-creds-chrome-ext/blob/main/PRIVACY.md`).
+   - **Privacy policy URL** — link to `PRIVACY.md` in your repo (e.g. `https://github.com/<your-org>/rails-credentials-chrome-extension/blob/main/PRIVACY.md`).
    - **Single purpose** — "Decrypts Rails encrypted credential files inline on GitHub pull request diffs."
    - **Permission justifications:**
      - `storage` — used for `chrome.storage.session` to hold master keys in memory only.
