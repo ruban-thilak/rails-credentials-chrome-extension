@@ -11,6 +11,7 @@ const KEY_IDS = [
 ];
 
 const STORAGE_KEY = "railsCredentialKeys";
+const TABS_KEY = "railsCredentialTabs";
 
 function showStatus(message, type) {
   const el = document.getElementById("status");
@@ -50,14 +51,26 @@ function validateKeys(keys) {
   return null;
 }
 
+async function trackCurrentTab() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+  if (!tab) return;
+
+  const result = await chrome.storage.session.get(TABS_KEY);
+  const tabSet = result[TABS_KEY] || [];
+  if (!tabSet.includes(tab.id)) {
+    tabSet.push(tab.id);
+    await chrome.storage.session.set({ [TABS_KEY]: tabSet });
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
-  chrome.storage.local.get(STORAGE_KEY, (result) => {
+  chrome.storage.session.get(STORAGE_KEY, (result) => {
     if (result[STORAGE_KEY]) {
       populateFields(result[STORAGE_KEY]);
     }
   });
 
-  document.getElementById("save-btn").addEventListener("click", () => {
+  document.getElementById("save-btn").addEventListener("click", async () => {
     const keys = collectKeys();
     const error = validateKeys(keys);
     if (error) {
@@ -65,21 +78,21 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    chrome.storage.local.set({ [STORAGE_KEY]: keys }, () => {
-      showStatus(
-        Object.keys(keys).length
-          ? `Saved ${Object.keys(keys).length} key(s).`
-          : "No keys to save.",
-        "success"
-      );
-    });
+    await chrome.storage.session.set({ [STORAGE_KEY]: keys });
+    await trackCurrentTab();
+    showStatus(
+      Object.keys(keys).length
+        ? `Saved ${Object.keys(keys).length} key(s). Keys will be cleared when all PR tabs are closed.`
+        : "No keys to save.",
+      "success"
+    );
   });
 
   document.getElementById("clear-btn").addEventListener("click", () => {
     for (const id of KEY_IDS) {
       document.getElementById(id).value = "";
     }
-    chrome.storage.local.remove(STORAGE_KEY, () => {
+    chrome.storage.session.remove([STORAGE_KEY, TABS_KEY], () => {
       showStatus("All keys cleared.", "success");
     });
   });

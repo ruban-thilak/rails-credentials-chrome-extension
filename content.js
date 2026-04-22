@@ -26,9 +26,19 @@
 
   function getStoredKeys() {
     return new Promise((resolve) => {
-      chrome.storage.local.get(STORAGE_KEY, (result) => {
-        resolve(result[STORAGE_KEY] || {});
-      });
+      try {
+        chrome.storage.session.get(STORAGE_KEY, (result) => {
+          if (chrome.runtime.lastError) {
+            log("Storage read failed:", chrome.runtime.lastError.message);
+            resolve({});
+            return;
+          }
+          resolve(result[STORAGE_KEY] || {});
+        });
+      } catch (e) {
+        log("Extension context invalidated — please reload the page.");
+        resolve({});
+      }
     });
   }
 
@@ -318,6 +328,7 @@
   }
 
   async function processPage() {
+    if (!isExtensionAlive()) return;
     const prInfo = getPrInfo();
     if (!prInfo) return;
 
@@ -404,25 +415,36 @@
   }
 
   async function initOnceStable() {
+    if (!isExtensionAlive()) return;
     log("Waiting for page to finish rendering...");
     await waitForIdle(2000);
+    if (!isExtensionAlive()) return;
     log("Page idle — injecting buttons");
     await processPage();
+  }
+
+  function isExtensionAlive() {
+    try {
+      return !!chrome.runtime?.id;
+    } catch {
+      return false;
+    }
   }
 
   function init() {
     log("Initialized:", window.location.href);
 
-    // Wait for GitHub to finish rendering before first injection
     initOnceStable();
 
-    // On SPA navigation, wait for the new page to settle too
     document.addEventListener("turbo:load", () => initOnceStable());
     document.addEventListener("pjax:end", () => initOnceStable());
 
-    // Periodic check: if React re-renders and removes our buttons, re-add them.
-    // Uses a long interval to avoid fighting with React.
-    setInterval(() => {
+    const intervalId = setInterval(() => {
+      if (!isExtensionAlive()) {
+        log("Extension context invalidated — stopping periodic check.");
+        clearInterval(intervalId);
+        return;
+      }
       const diffBlocks = document.querySelectorAll("[id^='diff-']");
       for (const block of diffBlocks) {
         if (block.querySelector("." + BTN_CLASS)) continue;

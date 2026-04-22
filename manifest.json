@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "description": "Helper for Rails encrypted credentials (.yml.enc) inline in GitHub PR diffs for review.",
   "permissions": ["storage", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
