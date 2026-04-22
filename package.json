@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "type": "module",
+  "name": "rails-credentials-helper",
+  "version": "1.0.0",
+  "description": "Chrome extension for decrypting Rails .yml.enc credentials inline on GitHub PRs",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "package": "./package.sh"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "vitest": "^3.0.0",
+    "globals": "^16.0.0"
+  }
+}

@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "tag=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify manifest version matches tag
+        run: |
+          MANIFEST_VERSION=$(node -p "require('./manifest.json').version")
+          TAG_VERSION="${{ steps.version.outputs.tag }}"
+          TAG_VERSION="${TAG_VERSION#v}"
+          if [ "$MANIFEST_VERSION" != "$TAG_VERSION" ]; then
+            echo "ERROR: manifest.json version ($MANIFEST_VERSION) does not match tag (v$TAG_VERSION)"
+            exit 1
+          fi
+          echo "Version match: $MANIFEST_VERSION"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+
+      - name: Build zip
+        run: ./package.sh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          body: |
+            ## Installation
+
+            1. Download `rails-credentials-helper-*.zip` from the assets below.
+            2. Open `chrome://extensions/` and enable **Developer mode**.
+            3. Drag and drop the zip file onto the page, or extract it and click **Load unpacked**.
+
+            Or install from the [Chrome Web Store](https://chrome.google.com/webstore/detail/TODO).

@@ -2,7 +2,8 @@
   "manifest_version": 3,
   "name": "Rails Credentials Helper",
   "version": "1.0.0",
-  "description": "Helper for Rails encrypted credentials (.yml.enc) inline in GitHub PR diffs for review.",
+  "description": "Decrypt Rails .yml.enc credential files inline on GitHub PR diffs for easy review.",
+  "minimum_chrome_version": "102",
   "permissions": ["storage", "activeTab"],
   "background": {
     "service_worker": "background.js"

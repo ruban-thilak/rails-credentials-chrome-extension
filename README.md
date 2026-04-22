@@ -8,6 +8,10 @@
   A Chrome extension that <strong>decrypts <code>.yml.enc</code> files inline</strong> on GitHub pull request diffs,<br>so you can review credential changes without leaving the browser.
 </p>
 
+<p align="center">
+  <a href="https://github.com/<your-org>/ruby-creds-chrome-ext/actions/workflows/ci.yml"><img src="https://github.com/<your-org>/ruby-creds-chrome-ext/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+</p>
+
 ---
 
 If you've ever opened a PR that touches `config/credentials/production/us.yml.enc` and seen nothing but a wall of base64, this extension is for you.
@@ -51,6 +55,14 @@ config/credentials/
 Each environment/region maps to a separate master key slot in the popup.
 
 ## Installation
+
+### From the Chrome Web Store
+
+1. Visit the [Rails Credentials Helper](https://chrome.google.com/webstore/detail/TODO) listing.
+2. Click **Add to Chrome**.
+3. Pin the extension for easy access.
+
+### From Source (Developer Mode)
 
 1. Clone the repo:
    ```bash
@@ -112,22 +124,74 @@ This mirrors exactly what `ActiveSupport::EncryptedFile#read` does in Ruby.
 ## Project Structure
 
 ```
-├── manifest.json    # Chrome extension manifest (v3)
-├── background.js    # Service worker — session key cleanup on tab close
-├── popup.html       # Extension popup UI
-├── popup.js         # Popup logic — key input, validation, storage
-├── popup.css        # Popup styles
-├── decrypt.js       # AES-128-GCM decryption + Ruby Marshal parsing
-├── content.js       # Content script — finds .yml.enc diffs, renders decrypted YAML
-└── content.css      # Injected styles for decrypt button and diff table
+├── manifest.json           # Chrome extension manifest (v3)
+├── background.js           # Service worker — key relay, tab cleanup
+├── popup.html              # Extension popup UI
+├── popup.js                # Popup logic — key input, validation, storage
+├── popup.css               # Popup styles
+├── decrypt.js              # AES-128-GCM decryption + Ruby Marshal parsing
+├── content.js              # Content script — finds .yml.enc diffs, renders YAML
+├── content.css             # Injected styles for decrypt button and diff table
+├── package.sh              # Builds a clean .zip for Chrome Web Store
+├── eslint.config.js        # ESLint flat config
+├── test/
+│   └── decrypt.test.js     # Unit tests for decryption logic
+├── .github/workflows/
+│   ├── ci.yml              # CI — lint, test, validate manifest, build zip
+│   └── release.yml         # Release — tag-triggered GitHub Release + zip
+└── PRIVACY.md              # Privacy policy (required by Chrome Web Store)
 ```
+
+## Publishing to the Chrome Web Store
+
+1. Register as a [Chrome Web Store developer](https://chrome.google.com/webstore/devconsole) (one-time $5 fee).
+2. Build the submission zip:
+   ```bash
+   ./package.sh
+   ```
+3. In the Developer Dashboard, click **New Item** and upload `dist/rails-credentials-helper-<version>.zip`.
+4. Fill in the store listing:
+   - **Description** — use the summary from this README.
+   - **Screenshots** — upload `screenshots/popup.png` (1280×800 or 640×400 recommended).
+   - **Category** — Developer Tools.
+   - **Privacy policy URL** — link to `PRIVACY.md` in your repo (e.g. `https://github.com/<your-org>/ruby-creds-chrome-ext/blob/main/PRIVACY.md`).
+   - **Single purpose** — "Decrypts Rails encrypted credential files inline on GitHub pull request diffs."
+   - **Permission justifications:**
+     - `storage` — used for `chrome.storage.session` to hold master keys in memory only.
+     - `activeTab` — used to identify the current PR tab for automatic key cleanup.
+     - Host permission `https://github.com/*/pull/*` — content script runs only on GitHub PR pages to detect and decrypt `.yml.enc` file diffs.
+5. Submit for review. Reviews typically take 1–3 business days.
+
+### Updating an Existing Listing
+
+1. Bump `"version"` in `manifest.json` (Chrome Web Store requires a strictly increasing version).
+2. Run `./package.sh` to build the new zip.
+3. In the Developer Dashboard, select the existing item, click **Package** → **Upload new package**, and upload the new zip.
+4. Submit for review.
+
+## Development
+
+```bash
+npm install          # Install dev dependencies (ESLint, Vitest)
+npm run lint         # Run ESLint across all JS files
+npm test             # Run unit tests (decrypt.js)
+npm run lint:fix     # Auto-fix lint issues
+./package.sh         # Build the Chrome Web Store zip
+```
+
+CI runs automatically on every push and pull request via GitHub Actions (lint, test, manifest validation, zip build).
 
 ## Contributing
 
 1. Fork the repo and create a feature branch.
-2. Load the unpacked extension from your fork's directory.
+2. `npm install` then load the unpacked extension from your fork's directory.
 3. Make changes — the content script reloads automatically on page refresh, but popup/background changes require clicking the refresh icon on `chrome://extensions/`.
-4. Open a PR.
+4. Run `npm run lint && npm test` before pushing.
+5. Open a PR.
+
+## Privacy
+
+See [PRIVACY.md](PRIVACY.md) for the full privacy policy. In short: all decryption happens client-side, keys are stored in memory only, and no data is ever sent to external servers.
 
 ## License
 
