@@ -13,8 +13,11 @@
 
   function filePathToKeyId(filePath) {
     const normalized = cleanPath(filePath);
-    const prodMatch = normalized.match(/config\/credentials\/production\/(ams-[a-z]+)\.yml\.enc$/);
-    if (prodMatch) return `key-production-${prodMatch[1]}`;
+    const REGIONS = ["us", "euc", "au", "ind", "eun", "mec"];
+    const prodMatch = normalized.match(/config\/credentials\/production\/[^/]+-([a-z]+)\.yml\.enc$/);
+    if (prodMatch && REGIONS.includes(prodMatch[1])) return `key-production-${prodMatch[1]}`;
+    const prodDirect = normalized.match(/config\/credentials\/production\/([a-z]+)\.yml\.enc$/);
+    if (prodDirect && REGIONS.includes(prodDirect[1])) return `key-production-${prodDirect[1]}`;
     if (/config\/credentials\/staging\//.test(normalized)) return "key-staging";
     if (/config\/credentials\/development\.yml\.enc$/.test(normalized)) return "key-development";
     if (/config\/credentials\/test\.yml\.enc$/.test(normalized)) return "key-test";
@@ -382,34 +385,56 @@
     }
   }
 
+  /**
+   * Wait for the page to stop mutating (GitHub's React rendering is done).
+   * Resolves once no DOM mutations have occurred for `quietMs` milliseconds.
+   */
+  function waitForIdle(quietMs = 2000) {
+    return new Promise((resolve) => {
+      let timer = setTimeout(resolve, quietMs);
+      const obs = new MutationObserver(() => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          obs.disconnect();
+          resolve();
+        }, quietMs);
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+
+  async function initOnceStable() {
+    log("Waiting for page to finish rendering...");
+    await waitForIdle(2000);
+    log("Page idle — injecting buttons");
+    await processPage();
+  }
+
   function init() {
     log("Initialized:", window.location.href);
 
-    // Initial scan, with a delay to let GitHub finish rendering
-    setTimeout(() => processPage(), 1000);
+    // Wait for GitHub to finish rendering before first injection
+    initOnceStable();
 
-    document.addEventListener("turbo:load", () => setTimeout(() => processPage(), 500));
-    document.addEventListener("pjax:end", () => setTimeout(() => processPage(), 500));
+    // On SPA navigation, wait for the new page to settle too
+    document.addEventListener("turbo:load", () => initOnceStable());
+    document.addEventListener("pjax:end", () => initOnceStable());
 
-    // Re-scan periodically when DOM changes — check if buttons are still present
-    let debounceTimer = null;
-    const observer = new MutationObserver(() => {
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => {
-        // Only re-scan if there are diff blocks without our button
-        const diffBlocks = document.querySelectorAll("[id^='diff-']");
-        for (const block of diffBlocks) {
-          if (block.querySelector("." + BTN_CLASS)) continue;
-          for (const link of block.querySelectorAll("a")) {
-            if (cleanPath(link.textContent).endsWith(".yml.enc")) {
-              processPage();
-              return;
-            }
+    // Periodic check: if React re-renders and removes our buttons, re-add them.
+    // Uses a long interval to avoid fighting with React.
+    setInterval(() => {
+      const diffBlocks = document.querySelectorAll("[id^='diff-']");
+      for (const block of diffBlocks) {
+        if (block.querySelector("." + BTN_CLASS)) continue;
+        for (const link of block.querySelectorAll("a")) {
+          if (cleanPath(link.textContent).endsWith(".yml.enc")) {
+            log("Button missing, re-adding...");
+            processPage();
+            return;
           }
         }
-      }, 1500);
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+      }
+    }, 5000);
   }
 
   if (document.readyState === "loading") {

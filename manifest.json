@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Rails Credentials Decryptor",
+  "name": "Rails Credentials Helper",
   "version": "1.0.0",
-  "description": "Decrypt Rails encrypted credentials (.yml.enc) inline in GitHub PR diffs for review.",
+  "description": "Helper for Rails encrypted credentials (.yml.enc) inline in GitHub PR diffs for review.",
   "permissions": ["storage", "activeTab"],
   "action": {
     "default_popup": "popup.html",

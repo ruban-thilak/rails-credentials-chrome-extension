@@ -10,10 +10,16 @@ body {
   color: #1f2328;
   background: #ffffff;
   width: 400px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .container {
   padding: 16px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 header {
@@ -88,6 +94,12 @@ h2 {
   gap: 6px;
 }
 
+.key-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
 .key-field {
   display: flex;
   align-items: center;
@@ -151,10 +163,16 @@ h2 {
   background: #e8ebef;
 }
 
+.sticky-footer {
+  flex-shrink: 0;
+  padding: 10px 16px 14px;
+  border-top: 1px solid #d0d7de;
+  background: #f6f8fa;
+}
+
 .actions {
   display: flex;
   gap: 8px;
-  margin-top: 16px;
 }
 
 .btn-primary, .btn-danger {
@@ -189,7 +207,7 @@ h2 {
 }
 
 .status {
-  margin-top: 10px;
+  margin-bottom: 8px;
   padding: 8px 10px;
   border-radius: 6px;
   font-size: 12px;

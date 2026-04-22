@@ -1,5 +1,5 @@
 /**
- * Rails Credentials Decryptor
+ * Rails Credentials Helper
  *
  * Decrypts Rails ActiveSupport::EncryptedFile content using AES-128-GCM.
  *

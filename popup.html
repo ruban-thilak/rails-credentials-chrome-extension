@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rails Credentials Decryptor</title>
+  <title>Rails Credentials Helper</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
@@ -13,7 +13,7 @@
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M12 2C9.24 2 7 4.24 7 7V10H5C3.9 10 3 10.9 3 12V20C3 21.1 3.9 22 5 22H19C20.1 22 21 21.1 21 20V12C21 10.9 20.1 10 19 10H17V7C17 4.24 14.76 2 12 2ZM12 4C13.66 4 15 5.34 15 7V10H9V7C9 5.34 10.34 4 12 4ZM12 14C13.1 14 14 14.9 14 16C14 17.1 13.1 18 12 18C10.9 18 10 17.1 10 16C10 14.9 10.9 14 12 14Z" fill="#e74c3c"/>
         </svg>
-        <h1>Rails Credentials Decryptor</h1>
+        <h1>Rails Credentials Helper</h1>
       </div>
       <p class="subtitle">Enter master keys to decrypt <code>.yml.enc</code> files in GitHub PR diffs.</p>
     </header>
@@ -24,72 +24,9 @@
     </div>
 
     <section class="key-section">
-      <h2>Production Keys</h2>
-      <p class="section-desc">One key per region. Each key is a 32-character hex string.</p>
-      <div class="key-grid">
-        <div class="key-field">
-          <label for="key-production-ams-us">US</label>
-          <input type="password" id="key-production-ams-us" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-us" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <div class="key-field">
-          <label for="key-production-ams-euc">EUC</label>
-          <input type="password" id="key-production-ams-euc" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-euc" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <div class="key-field">
-          <label for="key-production-ams-au">AU</label>
-          <input type="password" id="key-production-ams-au" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-au" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <div class="key-field">
-          <label for="key-production-ams-ind">IND</label>
-          <input type="password" id="key-production-ams-ind" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-ind" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <div class="key-field">
-          <label for="key-production-ams-eun">EUN</label>
-          <input type="password" id="key-production-ams-eun" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-eun" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-        <div class="key-field">
-          <label for="key-production-ams-mec">MEC</label>
-          <input type="password" id="key-production-ams-mec" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-production-ams-mec" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="key-section">
-      <h2>Staging Key</h2>
-      <p class="section-desc">Shared key for all staging stacks.</p>
-      <div class="key-grid">
-        <div class="key-field key-field-wide">
-          <label for="key-staging">Staging</label>
-          <input type="password" id="key-staging" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
-          <button class="toggle-vis" data-target="key-staging" title="Show/hide key">
-            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <section class="key-section">
       <h2>Development / Test Keys</h2>
       <p class="section-desc">Optional. For local credential files.</p>
-      <div class="key-grid">
+      <div class="key-list">
         <div class="key-field">
           <label for="key-development">Dev</label>
           <input type="password" id="key-development" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
@@ -107,13 +44,78 @@
       </div>
     </section>
 
+    <section class="key-section">
+      <h2>Staging Key</h2>
+      <p class="section-desc">Shared key for all staging stacks.</p>
+      <div class="key-list">
+        <div class="key-field">
+          <label for="key-staging">Staging</label>
+          <input type="password" id="key-staging" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-staging" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="key-section">
+      <h2>Production Keys</h2>
+      <p class="section-desc">One key per region. Matches any file ending in <code>-us.yml.enc</code>, <code>-euc.yml.enc</code>, etc.</p>
+      <div class="key-list">
+        <div class="key-field">
+          <label for="key-production-us">US</label>
+          <input type="password" id="key-production-us" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-us" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="key-field">
+          <label for="key-production-euc">EUC</label>
+          <input type="password" id="key-production-euc" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-euc" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="key-field">
+          <label for="key-production-au">AU</label>
+          <input type="password" id="key-production-au" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-au" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="key-field">
+          <label for="key-production-ind">IND</label>
+          <input type="password" id="key-production-ind" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-ind" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="key-field">
+          <label for="key-production-eun">EUN</label>
+          <input type="password" id="key-production-eun" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-eun" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+        <div class="key-field">
+          <label for="key-production-mec">MEC</label>
+          <input type="password" id="key-production-mec" placeholder="32-char hex key" maxlength="32" spellcheck="false" autocomplete="off">
+          <button class="toggle-vis" data-target="key-production-mec" title="Show/hide key">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 16 16"><path d="M8 3C4.36 3 1.26 5.28 0 8.5c1.26 3.22 4.36 5.5 8 5.5s6.74-2.28 8-5.5C14.74 5.28 11.64 3 8 3zm0 9.17c-2.01 0-3.64-1.49-3.64-3.33S5.99 5.5 8 5.5s3.64 1.49 3.64 3.33S10.01 12.17 8 12.17zm0-5.34c-1.21 0-2.18.9-2.18 2s.97 2 2.18 2 2.18-.9 2.18-2-.97-2-2.18-2z" fill="currentColor"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="sticky-footer">
+    <div id="status" class="status hidden"></div>
     <div class="actions">
       <button id="save-btn" class="btn-primary">Save Keys</button>
       <button id="clear-btn" class="btn-danger">Clear All</button>
     </div>
-
-    <div id="status" class="status hidden"></div>
-  </div>
+  </footer>
 
   <script src="popup.js"></script>
 </body>
