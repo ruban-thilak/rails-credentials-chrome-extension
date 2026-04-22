@@ -1,6 +1,5 @@
 (() => {
-  const STORAGE_KEY = "railsCredentialKeys";
-  const DEBUG = true;
+  const DEBUG = false;
   const BTN_CLASS = "rails-creds-decrypt-btn";
 
   function log(...args) {
@@ -24,16 +23,19 @@
     return null;
   }
 
+  // Keys are retrieved via message passing to the service worker, which
+  // validates sender origin before responding. This avoids granting content
+  // scripts direct access to chrome.storage.session (least privilege).
   function getStoredKeys() {
     return new Promise((resolve) => {
       try {
-        chrome.storage.session.get(STORAGE_KEY, (result) => {
+        chrome.runtime.sendMessage({ type: "GET_KEYS" }, (response) => {
           if (chrome.runtime.lastError) {
-            log("Storage read failed:", chrome.runtime.lastError.message);
+            log("Key request failed:", chrome.runtime.lastError.message);
             resolve({});
             return;
           }
-          resolve(result[STORAGE_KEY] || {});
+          resolve(response?.keys || {});
         });
       } catch (e) {
         log("Extension context invalidated — please reload the page.");
@@ -42,12 +44,8 @@
     });
   }
 
-  function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
-  }
-
+  // Returns a DOM element rather than an HTML string, so all user-controlled
+  // text is set via textContent — eliminating any innerHTML-based XSS vector.
   function buildYamlDiff(oldYaml, newYaml) {
     return renderDiffTable(computeLineDiff(
       oldYaml ? oldYaml.split("\n") : [],
@@ -80,33 +78,62 @@
     return result;
   }
 
+  function createDiffRow(line) {
+    const tr = document.createElement("tr");
+    if (line.type === "add") tr.className = "rails-creds-line-add";
+    else if (line.type === "del") tr.className = "rails-creds-line-del";
+
+    const tdOldNum = document.createElement("td");
+    tdOldNum.className = "rails-creds-line-num";
+    tdOldNum.textContent = line.oldNum ?? "";
+    tr.appendChild(tdOldNum);
+
+    const tdNewNum = document.createElement("td");
+    tdNewNum.className = "rails-creds-line-num";
+    tdNewNum.textContent = line.newNum ?? "";
+    tr.appendChild(tdNewNum);
+
+    const tdPrefix = document.createElement("td");
+    tdPrefix.className = "rails-creds-line-prefix";
+    tdPrefix.textContent = line.type === "add" ? "+" : line.type === "del" ? "-" : " ";
+    tr.appendChild(tdPrefix);
+
+    const tdContent = document.createElement("td");
+    tdContent.className = "rails-creds-line-content";
+    const pre = document.createElement("pre");
+    pre.textContent = line.text;
+    tdContent.appendChild(pre);
+    tr.appendChild(tdContent);
+
+    return tr;
+  }
+
   function renderDiffTable(diff) {
-    let html = '<table class="rails-creds-diff-table">';
+    const table = document.createElement("table");
+    table.className = "rails-creds-diff-table";
     for (const line of diff) {
-      const cls = line.type === "add" ? "rails-creds-line-add" : line.type === "del" ? "rails-creds-line-del" : "";
-      const prefix = line.type === "add" ? "+" : line.type === "del" ? "-" : " ";
-      html += `<tr class="${cls}">
-        <td class="rails-creds-line-num">${line.oldNum ?? ""}</td>
-        <td class="rails-creds-line-num">${line.newNum ?? ""}</td>
-        <td class="rails-creds-line-prefix">${prefix}</td>
-        <td class="rails-creds-line-content"><pre>${escapeHtml(line.text)}</pre></td>
-      </tr>`;
+      table.appendChild(createDiffRow(line));
     }
-    return html + "</table>";
+    return table;
   }
 
   function renderSingleFile(yaml, label) {
+    const fragment = document.createDocumentFragment();
+    const labelDiv = document.createElement("div");
+    labelDiv.className = "rails-creds-single-label";
+    labelDiv.textContent = label;
+    fragment.appendChild(labelDiv);
+
+    const table = document.createElement("table");
+    table.className = "rails-creds-diff-table";
     const lines = yaml.split("\n");
-    let html = `<div class="rails-creds-single-label">${escapeHtml(label)}</div><table class="rails-creds-diff-table">`;
     for (let i = 0; i < lines.length; i++) {
-      html += `<tr>
-        <td class="rails-creds-line-num">${i + 1}</td>
-        <td class="rails-creds-line-num"></td>
-        <td class="rails-creds-line-prefix"> </td>
-        <td class="rails-creds-line-content"><pre>${escapeHtml(lines[i])}</pre></td>
-      </tr>`;
+      table.appendChild(createDiffRow({
+        type: "same", oldNum: i + 1, newNum: "", text: lines[i],
+      }));
     }
-    return html + "</table>";
+    fragment.appendChild(table);
+    return fragment;
   }
 
   function showToast(message, type) {
@@ -225,9 +252,16 @@
     return result;
   }
 
+  // Hardcode origin and validate path components to prevent credential-
+  // forwarded requests to unintended repositories via path traversal.
   async function fetchRawContent(owner, repo, ref, filePath) {
-    const origin = window.location.origin;
-    const url = `${origin}/${owner}/${repo}/raw/${ref}/${filePath}`;
+    if (!/^[\w.-]+$/.test(owner) || !/^[\w.-]+$/.test(repo)) {
+      throw new Error("Invalid owner or repo name");
+    }
+    if (/\.\./.test(ref) || /\.\./.test(filePath)) {
+      throw new Error("Path traversal detected");
+    }
+    const url = `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/raw/${ref}/${filePath}`;
     log("Fetching:", url);
     const resp = await fetch(url, { credentials: "same-origin" });
     if (!resp.ok) throw new Error(`HTTP ${resp.status} for ${url}`);
@@ -308,15 +342,35 @@
 
     const decryptedDiv = document.createElement("div");
     decryptedDiv.className = "rails-creds-decrypted";
+
     const banner = document.createElement("div");
     banner.className = "rails-creds-banner";
-    banner.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>Decrypted credentials — for review only</span>`;
+    const bannerSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    bannerSvg.setAttribute("width", "14");
+    bannerSvg.setAttribute("height", "14");
+    bannerSvg.setAttribute("viewBox", "0 0 24 24");
+    bannerSvg.setAttribute("fill", "none");
+    bannerSvg.setAttribute("stroke", "currentColor");
+    bannerSvg.setAttribute("stroke-width", "2");
+    const svgPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    svgPath.setAttribute("d", "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z");
+    bannerSvg.appendChild(svgPath);
+    const svgCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    svgCircle.setAttribute("cx", "12");
+    svgCircle.setAttribute("cy", "12");
+    svgCircle.setAttribute("r", "3");
+    bannerSvg.appendChild(svgCircle);
+    banner.appendChild(bannerSvg);
+    const bannerText = document.createElement("span");
+    bannerText.textContent = "Decrypted credentials \u2014 for review only";
+    banner.appendChild(bannerText);
     decryptedDiv.appendChild(banner);
+
     const contentDiv = document.createElement("div");
     contentDiv.className = "rails-creds-content";
-    if (oldYaml && newYaml) contentDiv.innerHTML = buildYamlDiff(oldYaml, newYaml);
-    else if (newYaml) contentDiv.innerHTML = renderSingleFile(newYaml, "Current");
-    else contentDiv.innerHTML = renderSingleFile(oldYaml, "Previous");
+    if (oldYaml && newYaml) contentDiv.appendChild(buildYamlDiff(oldYaml, newYaml));
+    else if (newYaml) contentDiv.appendChild(renderSingleFile(newYaml, "Current"));
+    else contentDiv.appendChild(renderSingleFile(oldYaml, "Previous"));
     decryptedDiv.appendChild(contentDiv);
 
     const diffBody = diffBlock.querySelector(".js-file-content, .blob-wrapper, .data, table");

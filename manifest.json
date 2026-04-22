@@ -7,6 +7,9 @@
   "background": {
     "service_worker": "background.js"
   },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; style-src 'self'"
+  },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -22,7 +25,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://github.com/*/pull/*"],
+      "matches": ["https://github.com/*/pull/*"],
       "js": ["decrypt.js", "content.js"],
       "css": ["content.css"]
     }

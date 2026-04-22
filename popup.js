@@ -44,7 +44,8 @@ function populateFields(keys) {
 function validateKeys(keys) {
   for (const [id, val] of Object.entries(keys)) {
     if (!/^[0-9a-fA-F]{32}$/.test(val)) {
-      const label = document.querySelector(`label[for="${id}"]`).textContent;
+      // Use CSS.escape to prevent selector injection if id values ever become dynamic.
+      const label = document.querySelector(`label[for="${CSS.escape(id)}"]`)?.textContent || id;
       return `${label}: key must be exactly 32 hex characters.`;
     }
   }
