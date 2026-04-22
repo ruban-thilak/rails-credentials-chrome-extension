@@ -1,19 +1,73 @@
 <svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#ef4444"/>
-      <stop offset="100%" stop-color="#991b1b"/>
+    <linearGradient id="gem" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0%" stop-color="#f87171"/>
+      <stop offset="45%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#7f1d1d"/>
     </linearGradient>
+    <radialGradient id="eyeShine" cx="0.35" cy="0.3" r="0.5">
+      <stop offset="0%" stop-color="#666"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </radialGradient>
   </defs>
 
-  <!-- Rounded tile background -->
-  <rect width="128" height="128" rx="28" fill="url(#bg)"/>
+  <!-- === GEM BODY (lower portion) === -->
+  <polygon points="28,48 100,48 120,72 64,124 8,72" fill="url(#gem)"/>
 
-  <!-- Subtle top highlight for depth -->
-  <rect width="128" height="60" rx="28" fill="#ffffff" opacity="0.08"/>
+  <!-- Facet highlights -->
+  <line x1="28" y1="48" x2="8" y2="72" stroke="#fecaca" stroke-width="1.5" opacity="0.5"/>
+  <line x1="100" y1="48" x2="120" y2="72" stroke="#fecaca" stroke-width="1.5" opacity="0.5"/>
+  <line x1="8" y1="72" x2="120" y2="72" stroke="#7f1d1d" stroke-width="1.2" opacity="0.3"/>
+  <line x1="28" y1="48" x2="64" y2="124" stroke="#7f1d1d" stroke-width="1" opacity="0.15"/>
+  <line x1="100" y1="48" x2="64" y2="124" stroke="#7f1d1d" stroke-width="1" opacity="0.15"/>
+  <line x1="28" y1="48" x2="100" y2="48" stroke="#fee2e2" stroke-width="1.5" opacity="0.5"/>
 
-  <!-- Octocat, scaled 4.5x and centered -->
-  <g transform="translate(28, 28) scale(4.5)">
-    <path fill-rule="evenodd" fill="#ffffff" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-  </g>
+  <!-- === CAT EARS (behind the head) === -->
+  <!-- Left ear outer (white) -->
+  <polygon points="28,52 42,10 56,50" fill="#ffffff"/>
+  <!-- Left ear inner (pink) -->
+  <polygon points="34,48 43,18 52,48" fill="#fca5a5"/>
+
+  <!-- Right ear outer (white) -->
+  <polygon points="72,50 86,10 100,52" fill="#ffffff"/>
+  <!-- Right ear inner (pink) -->
+  <polygon points="76,48 85,18 94,48" fill="#fca5a5"/>
+
+  <!-- === CAT FACE === -->
+  <ellipse cx="64" cy="60" rx="32" ry="28" fill="#ffffff"/>
+
+  <!-- === EYES (big anime style) === -->
+  <!-- Left eye -->
+  <ellipse cx="50" cy="58" rx="8" ry="9" fill="url(#eyeShine)"/>
+  <!-- Left eye highlight (big) -->
+  <ellipse cx="47" cy="54" rx="3" ry="3.5" fill="#ffffff" opacity="0.9"/>
+  <!-- Left eye highlight (small) -->
+  <circle cx="53" cy="61" r="1.5" fill="#ffffff" opacity="0.6"/>
+
+  <!-- Right eye -->
+  <ellipse cx="78" cy="58" rx="8" ry="9" fill="url(#eyeShine)"/>
+  <!-- Right eye highlight (big) -->
+  <ellipse cx="75" cy="54" rx="3" ry="3.5" fill="#ffffff" opacity="0.9"/>
+  <!-- Right eye highlight (small) -->
+  <circle cx="81" cy="61" r="1.5" fill="#ffffff" opacity="0.6"/>
+
+  <!-- === NOSE === -->
+  <ellipse cx="64" cy="67" rx="2.5" ry="1.8" fill="#f9a8b8"/>
+
+  <!-- === MOUTH (w-shape) === -->
+  <path d="M58 71 Q61 74 64 71 Q67 74 70 71" stroke="#d4a0a0" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+
+  <!-- === BLUSH MARKS === -->
+  <ellipse cx="40" cy="66" rx="5" ry="3" fill="#fca5a5" opacity="0.45"/>
+  <ellipse cx="88" cy="66" rx="5" ry="3" fill="#fca5a5" opacity="0.45"/>
+
+  <!-- === WHISKERS === -->
+  <!-- Left whiskers -->
+  <line x1="20" y1="58" x2="38" y2="62" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
+  <line x1="18" y1="64" x2="37" y2="66" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
+  <line x1="20" y1="70" x2="38" y2="68" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
+  <!-- Right whiskers -->
+  <line x1="108" y1="58" x2="90" y2="62" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
+  <line x1="110" y1="64" x2="91" y2="66" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
+  <line x1="108" y1="70" x2="90" y2="68" stroke="#d4a0a0" stroke-width="0.8" opacity="0.4"/>
 </svg>
